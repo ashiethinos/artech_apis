@@ -40,6 +40,9 @@ curl_close($ch); // Close the cURL session
 
 $api_response_jobs_data = json_decode($api_response, true)['items'][0]['requisitionList'];
 
+var_dump($api_response_jobs_data);
+die;
+
 // Display data in a table
 
 // Connect to the database
@@ -119,45 +122,45 @@ foreach ($api_response_jobs_data as $job) {
     if ($exists == 0) {
         // Prepare parameters for insertion
         $params = [
-            $job['Id'] ?? 'N/A',
-            $job['Title'] ?? 'N/A',
-            $job['PostedDate'] ?? 'N/A',
-            $job['PostingEndDate'] ?? 'N/A',
-            $job['Language'] ?? 'N/A',
-            $job['PrimaryLocationCountry'] ?? 'N/A',
-            $job['GeographyId'] ?? 'N/A',
-            $job['HotJobFlag'] ? 'Yes' : 'No',
-            $job['WorkplaceTypeCode'] ?? 'N/A',
-            $job['JobFamily'] ?? 'N/A',
-            $job['JobFunction'] ?? 'N/A',
-            $job['WorkerType'] ?? 'N/A',
-            $job['ContractType'] ?? 'N/A',
-            $job['ManagerLevel'] ?? 'N/A',
-            $job['JobSchedule'] ?? 'N/A',
-            $job['JobShift'] ?? 'N/A',
-            $job['JobType'] ?? 'N/A',
-            $job['StudyLevel'] ?? 'N/A',
-            $job['DomesticTravelRequired'] ?? 'N/A',
-            $job['InternationalTravelRequired'] ?? 'N/A',
-            $job['WorkDurationYears'] ?? 'N/A',
-            $job['WorkDurationMonths'] ?? 'N/A',
-            $job['WorkHours'] ?? 'N/A',
-            $job['WorkDays'] ?? 'N/A',
-            $job['LegalEmployer'] ?? 'N/A',
-            $job['BusinessUnit'] ?? 'N/A',
-            $job['Department'] ?? 'N/A',
-            $job['Organization'] ?? 'N/A',
-            $job['MediaThumbURL'] ?? 'N/A',
-            $job['ShortDescriptionStr'] ?? 'N/A',
-            $job['PrimaryLocation'] ?? 'N/A',
-            $job['Distance'] ?? 'N/A',
-            $job['TrendingFlag'] ? 'Yes' : 'No',
-            $job['BeFirstToApplyFlag'] ? 'Yes' : 'No',
-            $job['Relevancy'] ?? 'N/A',
-            $job['WorkplaceType'] ?? 'N/A',
-            $job['ExternalQualificationsStr'] ?? 'N/A',
-            $job['ExternalResponsibilitiesStr'] ?? 'N/A',
-            json_encode($job['secondaryLocations']) // Encode as JSON for storage
+            !isset($job['Id']) ? null : $job['Id'],
+            !isset($job['Title']) ? null : $job['Title'],
+            !isset($job['PostedDate']) ? null : $job['PostedDate'],
+            !isset($job['PostingEndDate']) ? null : $job['PostingEndDate'],
+            !isset($job['Language']) ? null : $job['Language'],
+            !isset($job['PrimaryLocationCountry']) ? null : $job['PrimaryLocationCountry'],
+            !isset($job['GeographyId']) ? null : $job['GeographyId'],
+            !isset($job['HotJobFlag']) ? null : ($job['HotJobFlag'] ? 'Yes' : 'No'),
+            !isset($job['WorkplaceTypeCode']) ? null : $job['WorkplaceTypeCode'],
+            !isset($job['JobFamily']) ? null : $job['JobFamily'],
+            !isset($job['JobFunction']) ? null : $job['JobFunction'],
+            !isset($job['WorkerType']) ? null : $job['WorkerType'],
+            !isset($job['ContractType']) ? null : $job['ContractType'],
+            !isset($job['ManagerLevel']) ? null : $job['ManagerLevel'],
+            !isset($job['JobSchedule']) ? null : $job['JobSchedule'],
+            !isset($job['JobShift']) ? null : $job['JobShift'],
+            !isset($job['JobType']) ? null : $job['JobType'],
+            !isset($job['StudyLevel']) ? null : $job['StudyLevel'],
+            !isset($job['DomesticTravelRequired']) ? null : $job['DomesticTravelRequired'],
+            !isset($job['InternationalTravelRequired']) ? null : $job['InternationalTravelRequired'],
+            !isset($job['WorkDurationYears']) ? null : $job['WorkDurationYears'],
+            !isset($job['WorkDurationMonths']) ? null : $job['WorkDurationMonths'],
+            !isset($job['WorkHours']) ? null : $job['WorkHours'],
+            !isset($job['WorkDays']) ? null : $job['WorkDays'],
+            !isset($job['LegalEmployer']) ? null : $job['LegalEmployer'],
+            !isset($job['BusinessUnit']) ? null : $job['BusinessUnit'],
+            !isset($job['Department']) ? null : $job['Department'],
+            !isset($job['Organization']) ? null : $job['Organization'],
+            !isset($job['MediaThumbURL']) ? null : $job['MediaThumbURL'],
+            !isset($job['ShortDescriptionStr']) ? null : $job['ShortDescriptionStr'],
+            !isset($job['PrimaryLocation']) ? null : $job['PrimaryLocation'],
+            !isset($job['Distance']) ? null : $job['Distance'],
+            !isset($job['TrendingFlag']) ? null : $job['TrendingFlag'],
+            !isset($job['BeFirstToApplyFlag']) ? null : $job['BeFirstToApplyFlag'],
+            !isset($job['Relevancy']) ? null : $job['Relevancy'],
+            !isset($job['WorkplaceType']) ? null : $job['WorkplaceType'],
+            !isset($job['ExternalQualificationsStr']) ? null : $job['ExternalQualificationsStr'],
+            !isset($job['ExternalResponsibilitiesStr']) ? null : $job['ExternalResponsibilitiesStr'],
+            !isset($job['secondaryLocations']) || empty($job['secondaryLocations']) ? null : json_encode($job['secondaryLocations'])
         ];
         
         // Bind parameters and insert data

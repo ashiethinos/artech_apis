@@ -26,6 +26,11 @@ $api_response = curl_exec($ch);
 $dataIds = json_decode($api_response, true);
 
 
+if(isset($dataIds['status']) == 401){
+    var_dump($dataIds['message']);
+    die;
+}
+
 $jobIds = [];
 
 foreach (array_slice($dataIds['data'], 1) as $single_data) {
