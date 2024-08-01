@@ -171,5 +171,10 @@ $stmt->close();
 $conn->close();
 
 // Return success message
-echo json_encode(["message" => "Table created/updated and All data inserted successfully"]);
+echo json_encode([
+    "status"=>"success",
+    "from"=>"jobdiva",
+    "message" => "Data retrieved successfully",
+    "jobs" => $jobs
+]);
 ?>

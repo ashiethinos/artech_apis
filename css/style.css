@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{font-family: "Poppins", sans-serif;font-weight: 400;font-style: normal;}
+.artech-job .jobheader{background-image: url(../images/jlheader.png);background-repeat: no-repeat;background-size:cover;}
+.artech-job .job-detail-header{background-image: url(../images/job-detail-header.png);background-repeat: no-repeat;background-size:cover;}
+.artech-job .text-white{color: #fff;}
+.artech-job .row{margin:0px;}
+.artech-job h1{font-size: 30px;}
+.artech-job p{font-size: 16px;}
+.artech-job a{color: rgba(119, 119, 119, 1);text-decoration: none;font-size: 16px;}
+.artech-job .bdr-1{border: 1px solid rgba(210, 210, 210, 1);border-radius:18px;padding: 10px;}
+.artech-job .bdr-2{border: 1px solid rgba(210, 210, 210, 1);border-radius:40px;padding: 10px;}
+.artech-job .input-group-text{background-color: transparent;border: none;}
+.artech-job .jl-search{border: none;}
+.artech-job .form-control:focus {box-shadow: none;}
+.artech-job .bdr-right{border-right: 1px solid rgba(210, 210, 210, 1);}
+.artech-job select::after{background-image: url(../images/down.svg);}
+.artech-job .btn-jl-common{font-size:16px;background-color: rgba(37, 62, 145, 1);color:#fff;border: none;border-radius: 40px;padding: 10px 15px;}
+.artech-job .btn-jl-common:hover{font-size:16px;background-color: rgba(37, 62, 145, 1);color:#fff;border: none;border-radius: 40px;padding: 10px 15px;}
+.artech-job .mr-20{margin-right:20px;margin-bottom: 15px;}
+.artech-job .btn-On-site{background-color: rgba(67, 176, 42, 1);border-radius:20px;color: #fff;padding:5px 15px;}
+.artech-job .btn-On-site:hover{background-color: rgba(67, 176, 42, 1);border-radius:20px;color: #fff;padding:5px 15px;}
+.artech-job .fw-700{font-weight: 700;}
+.artech-job .fs-12{font-size: 12px!important;}
+.artech-job .fs-18{font-size: 18px;}
+.artech-job .fs-20{font-size: 20px;}
+.artech-job .fw-500{font-weight: 500;}
+.artech-job .text-grey{color: rgba(119, 119, 119, 1);}
+.artech-job .btn-remote{background-color: rgba(37, 62, 145, 1);border-radius:20px;color: #fff;padding:5px 15px;}
+.artech-job .btn-remote:hover{background-color: rgba(37, 62, 145, 1);border-radius:20px;color: #fff;padding:5px 15px;}
+.artech-job .btn-hybrid{background-color: rgba(245, 88, 0, 1);border-radius:20px;color: #fff;padding:5px 15px;}
+.artech-job .btn-hybrid{background-color: rgba(245, 88, 0, 1);border-radius:20px;color: #fff;padding:5px 15px;}
+.artech-job .nav-pills .active{border:1px solid rgba(38, 60, 156, 1);border-radius: 18px;}
+.artech-job .contentBox-content{list-style: none;margin-bottom: 0px;padding-left: 22px;}
+.artech-job .contentBox-content li{margin-bottom: 15px;}
+.artech-job .form-select {color: #777777;}
+.artech-job .link{color: rgba(38, 60, 156, 1);text-decoration: underline;}
+.artech-job .form-control {width: 100%;padding: 0.8rem .8rem;color: #777777;}
+.artech-job .card{border: 1px solid rgba(225, 225, 225, 1);}
+.artech-job .text-voilet{color:rgba(111, 51, 141, 1);}
+.artech-job .upload_dropZone {color: #0f3c4b;outline: 1.9px dashed rgba(111, 51, 141, 1); outline-offset: -5px;transition:outline-offset 0.2s ease-out,outline-color 0.3s ease-in-out,background-color 0.2s ease-out;}
+.artech-job .mt--100{margin-top:-100px;}
+.artech-job .list-scroll{height: 615px; overflow-y: scroll;}
+
+.list-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.list-scroll{
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+
+@media only screen and (max-width: 600px) {
+  .artech-job .bdr-right{border-right: 0px solid rgba(210, 210, 210, 1);}
+  .artech-job .input-group{border-bottom: 1px solid rgba(210, 210, 210, 1);margin: 10px 0px;}
+  .artech-job .form-control{font-size: 14px;}
+  .artech-job .list-scroll{height: 350px; overflow-y: scroll;}
+  }
+
+
+  .loader.active {
+    margin:auto;
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(37, 62, 145, 1);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 

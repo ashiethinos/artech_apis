@@ -1,18 +1,3 @@
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-    th {
-        background-color: #f2f2f2;
-        text-align: left;
-    }
-</style>
-
 <?php
 include './config.php';
 
@@ -40,10 +25,7 @@ curl_close($ch); // Close the cURL session
 
 $api_response_jobs_data = json_decode($api_response, true)['items'][0]['requisitionList'];
 
-var_dump($api_response_jobs_data);
-die;
 
-// Display data in a table
 
 // Connect to the database
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -53,38 +35,72 @@ if ($conn->connect_error) {
 
 // Define table name and columns
 $table_name = $table_name_oracle;
-$columns = [
-    "id", "title", "postedDate", "postingEndDate", "language", "primaryLocationCountry",
-    "geographyId", "hotJobFlag", "workplaceTypeCode", "jobFamily", "jobFunction",
-    "workerType", "contractType", "managerLevel", "jobSchedule", "jobShift", "jobType",
-    "studyLevel", "domesticTravelRequired", "internationalTravelRequired",
-    "workDurationYears", "workDurationMonths", "workHours", "workDays", "legalEmployer",
-    "businessUnit", "department", "organization", "mediaThumbUrl", "shortDescriptionStr",
-    "primaryLocation", "distance", "trendingFlag", "beFirstToApplyFlag", "relevancy",
-    "workplaceType", "externalQualificationsStr", "externalResponsibilitiesStr",
-    "secondaryLocations"
-];
 
-// Function to add missing columns to the table
+// Function to add missing columns to the table start -------------------------------------------
 function addMissingColumns($conn, $table_name, $columns) {
     $existing_columns = [];
     $result = $conn->query("SHOW COLUMNS FROM `$table_name`");
+
     if ($result) {
         while ($row = $result->fetch_assoc()) {
-            $existing_columns[] = $row['Field'];
+            $existing_columns[$row['Field']] = $row['Type'];
         }
     }
 
-    foreach ($columns as $column) {
-        if (!in_array($column, $existing_columns)) {
-            $sql = "ALTER TABLE `$table_name` ADD COLUMN `$column` TEXT";
+    $errors = [];
+    foreach ($columns as $column => $type) {
+        if (!array_key_exists($column, $existing_columns)) {
+            $sql = "ALTER TABLE `$table_name` ADD COLUMN `$column` $type";
             if (!$conn->query($sql)) {
-                return "Error adding column `$column`: " . $conn->error;
+                $errors[] = "Error adding column `$column` with type `$type`: " . $conn->error;
             }
         }
     }
-    return true;
+    
+    return empty($errors) ? true : $errors;
 }
+
+$columns = [
+    'id' => 'VARCHAR(255)', // Added ID column
+    'title' => 'VARCHAR(255)',
+    'postedDate' => 'DATE',
+    'postingEndDate' => 'DATE',
+    'language' => 'VARCHAR(10)',
+    'primaryLocationCountry' => 'VARCHAR(10)',
+    'geographyId' => 'BIGINT',
+    'hotJobFlag' => 'BOOLEAN',
+    'workplaceTypeCode' => 'VARCHAR(50)',
+    'jobFamily' => 'VARCHAR(255)',
+    'jobFunction' => 'VARCHAR(255)',
+    'workerType' => 'VARCHAR(255)',
+    'contractType' => 'VARCHAR(255)',
+    'managerLevel' => 'VARCHAR(255)',
+    'jobSchedule' => 'VARCHAR(255)',
+    'jobShift' => 'VARCHAR(255)',
+    'jobType' => 'VARCHAR(255)',
+    'studyLevel' => 'VARCHAR(255)',
+    'domesticTravelRequired' => 'VARCHAR(255)',
+    'internationalTravelRequired' => 'VARCHAR(255)',
+    'workDurationYears' => 'INT',
+    'workDurationMonths' => 'INT',
+    'workHours' => 'VARCHAR(255)',
+    'workDays' => 'VARCHAR(255)',
+    'legalEmployer' => 'VARCHAR(255)',
+    'businessUnit' => 'VARCHAR(255)',
+    'department' => 'VARCHAR(255)',
+    'organization' => 'VARCHAR(255)',
+    'mediaThumbURL' => 'VARCHAR(255)',
+    'shortDescriptionStr' => 'TEXT',
+    'primaryLocation' => 'VARCHAR(255)',
+    'distance' => 'FLOAT',
+    'trendingFlag' => 'BOOLEAN',
+    'beFirstToApplyFlag' => 'BOOLEAN',
+    'relevancy' => 'INT',
+    'workplaceType' => 'VARCHAR(255)',
+    'externalQualificationsStr' => 'TEXT',
+    'externalResponsibilitiesStr' => 'TEXT',
+    'secondaryLocations' => 'TEXT' // This will be JSON encoded
+];
 
 // Add missing columns if necessary
 $addColumnsResult = addMissingColumns($conn, $table_name, $columns);
@@ -92,9 +108,16 @@ $addColumnsResult = addMissingColumns($conn, $table_name, $columns);
 if ($addColumnsResult !== true) {
     die(json_encode(["error" => $addColumnsResult]));
 }
+// Function to add missing columns to the table end ----------------------------------------------
+
+
 
 // Prepare statement for inserting data
-$stmt = $conn->prepare("INSERT INTO `$table_name` (`" . implode("`, `", $columns) . "`) VALUES (" . rtrim(str_repeat("?, ", count($columns)), ", ") . ")");
+$columnsList = array_keys($columns);
+$placeholders = rtrim(str_repeat("?, ", count($columns)), ", ");
+
+$sql = "INSERT INTO `$table_name` (`" . implode("`, `", $columnsList) . "`) VALUES ($placeholders)";
+$stmt = $conn->prepare($sql);
 
 if (!$stmt) {
     die(json_encode(["error" => "Prepare statement failed: " . $conn->error]));
@@ -102,6 +125,7 @@ if (!$stmt) {
 
 // Prepare statement to check for existing job IDs
 $check_sql = "SELECT COUNT(*) FROM `$table_name` WHERE `id` = ?";
+
 $check_stmt = $conn->prepare($check_sql);
 
 if (!$check_stmt) {
@@ -122,7 +146,7 @@ foreach ($api_response_jobs_data as $job) {
     if ($exists == 0) {
         // Prepare parameters for insertion
         $params = [
-            !isset($job['Id']) ? null : $job['Id'],
+            $jobId,
             !isset($job['Title']) ? null : $job['Title'],
             !isset($job['PostedDate']) ? null : $job['PostedDate'],
             !isset($job['PostingEndDate']) ? null : $job['PostingEndDate'],
@@ -154,17 +178,18 @@ foreach ($api_response_jobs_data as $job) {
             !isset($job['ShortDescriptionStr']) ? null : $job['ShortDescriptionStr'],
             !isset($job['PrimaryLocation']) ? null : $job['PrimaryLocation'],
             !isset($job['Distance']) ? null : $job['Distance'],
-            !isset($job['TrendingFlag']) ? null : $job['TrendingFlag'],
-            !isset($job['BeFirstToApplyFlag']) ? null : $job['BeFirstToApplyFlag'],
+            !isset($job['TrendingFlag']) ? null : ($job['TrendingFlag'] ? 'Yes' : 'No'),
+            !isset($job['BeFirstToApplyFlag']) ? null : ($job['BeFirstToApplyFlag'] ? 'Yes' : 'No'),
             !isset($job['Relevancy']) ? null : $job['Relevancy'],
             !isset($job['WorkplaceType']) ? null : $job['WorkplaceType'],
             !isset($job['ExternalQualificationsStr']) ? null : $job['ExternalQualificationsStr'],
             !isset($job['ExternalResponsibilitiesStr']) ? null : $job['ExternalResponsibilitiesStr'],
-            !isset($job['secondaryLocations']) || empty($job['secondaryLocations']) ? null : json_encode($job['secondaryLocations'])
+            !isset($job['SecondaryLocations']) || empty($job['SecondaryLocations']) ? null : json_encode($job['SecondaryLocations'])
         ];
         
         // Bind parameters and insert data
-        $stmt->bind_param(str_repeat("s", count($params)), ...$params);
+        $types = str_repeat("s", count($params));
+        $stmt->bind_param($types, ...$params);
         
         if (!$stmt->execute()) {
             die(json_encode(["error" => "Execute failed: " . $stmt->error]));
@@ -172,11 +197,37 @@ foreach ($api_response_jobs_data as $job) {
     }
 }
 
+
+// Define SQL query to select all data from the table
+$sql = "SELECT * FROM oracle_jobs";
+$result = $conn->query($sql);
+
+// Check for errors in query execution
+if (!$result) {
+    die(json_encode(["error" => "Query failed: " . $conn->error]));
+}
+
+// Fetch the results and store in an array
+$jobs = [];
+while ($row = $result->fetch_assoc()) {
+    $jobs[] = $row;
+}
+
+// Free result set
+$result->free();
+
 // Close statements and database connection
 $stmt->close();
 $check_stmt->close();
 $conn->close();
 
+
+
 // Return success message
-echo json_encode(["message" => "Table created/updated and all new data inserted successfully"]);
+echo json_encode([
+    "status"=>"success",
+    "from"=>"oracle",
+    "message" => "Data retrieved successfully",
+    "jobs" => $jobs
+]);
 ?>
