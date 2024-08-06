@@ -140,7 +140,7 @@ include './config.php';
 $(document).ready(function(){
 $('.loader').addClass('active')
 
-    var apiUrl = 'oracle_api.php';
+    var apiUrl = 'jobdiva_api.php';
     $.ajax({
         url: apiUrl,
         type: 'GET',
@@ -162,19 +162,20 @@ $('.loader').addClass('active')
             <div  class="${index == 0 ? 'active' : ''} mb-3" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jobcard${job.id}" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
                 <div class="col-md-12 bdr-1 py-4 px-2">
                     <div class="row">
-                        <div class="col-md-6 col-6"><button class="btn ${job.workplaceType == 'On-site' ? 'btn-on-site' : 'btn-remote'}">${job.workplaceType || 'On-site'}</button></div>
-                        <div class="col-md-6 col-6 m-auto text-end">${job.postedDate || 'Date'}</div>
-                        <div class="col-md-12 text-center fw-700 my-3">${job.title || 'Title'}</div>
+                        <div class="col-md-6 col-6"><button class="btn ${job.onsiteFlexibility == 1 ? 'btn-on-site' : 'btn-remote'}">${job.onsiteFlexibility == 1  ?  'On-site' : 'Remote'}</button></div>
+                        <div class="col-md-6 col-6 m-auto text-end">${job.dateIssued || 'Date'}</div>
+                        <div class="col-md-12 text-center fw-700 my-3">${job.jobTitle || 'Title'}</div>
                         <div class="col-md-12">
                             <div class="row justify-content-center">
-                                ${job.skills ? job.skills.map(skill => `<div class="col-lg-2 col-5 bdr-2 text-center m-1 fs-12">${skill}</div>`).join('') : ''}
+                              <div class="col-lg-2 col-5 bdr-2 text-center m-1 fs-12">
+    ${job.skills}</div>
                             </div>
                         </div>
                                    <div class="col-md-12 text-center">
                             <p class="mb-0 mt-4 fs-12"> Duration : ${job.duration || "No such field available"}</p>
                         </div>
                         <div class="col-md-12 text-center">
-                            <p class="mb-0 mt-1 fs-12">${job.shortDescriptionStr.length < 100 ? job.shortDescriptionStr : job.shortDescriptionStr.substr(0,100) + '...'}</p>
+                            <p class="mb-0 mt-1 fs-12">${''}</p>
                         </div>
                     </div>
                 </div>
@@ -186,11 +187,11 @@ $('.loader').addClass('active')
                     <div class="col-md-12 bdr-1 py-4 px-2 mb-3">
                         <div class="row">
                             <div class="col-md-6">
-                                <p class="fw-700 fs-18">${job.title}</p>
+                                <p class="fw-700 fs-18">${job.postingTitle}</p>
                                 <p class="mb-0 fs-12 text-grey">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
                                         <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/><path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                                    </svg>&nbsp; ${job.primaryLocation}
+                                    </svg>&nbsp; ${job.postingCity}, ${job.postingState}, ${job.postingCountry}
                                 </p>
                             </div>
                             <div class="col-md-6 m-auto text-end">
@@ -202,7 +203,7 @@ $('.loader').addClass('active')
                         <div class="row">
                             <div class="col-md-12">
                                 <p class="fs-18 fw-500 mb-2">Job Description</p>
-                                <p class="text-grey mb-2"> ${job.jobDescriptionStr || 'No Job Description [no such field]'}</p>
+                                <p class="text-grey mb-2"> ${job.jobDescription }</p>
                                 <p><span class="fw-500 mb-2">Duration :</span><span class="text-grey"> ${job.duration || 'N/A'}</span></p>
                                 <p class="text-grey">${job.shortDescriptionStr || 'No Short Description'}</p>
                             </div>

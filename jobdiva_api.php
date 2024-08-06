@@ -38,6 +38,7 @@
         "status"=>"success",
         "from"=>"jobdiva",
         "message" => "Jobs retrieved successfully",
-        "jobs" => $jobs
+        "jobs" => $jobs,
+        
     ]);
     ?>

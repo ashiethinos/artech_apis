@@ -41,8 +41,6 @@ $api_response = curl_exec($ch);
 $dataIds = json_decode($api_response, true);
 
 
-
-
 if(isset($dataIds['status']) == 401){
     var_dump($dataIds['message']);
     die;
@@ -92,6 +90,7 @@ function addMissingColumns($conn, $table_name, $columns) {
 // Define table name and columns
 $table_name = $table_name_jobdiva;
 $columns = [
+    "id" => "INT",
     "dateIssued" => "DATETIME",
     "dateUpdated" => "DATETIME",
     "dateUserFieldUpdated" => "DATETIME",
@@ -189,9 +188,12 @@ if ($addColumnsResult !== true) {
 
 // Prepare statement for inserting data
 $columnsList = array_keys($columns);
+
+
 $placeholders = rtrim(str_repeat("?, ", count($columns)), ", ");
 
 $sql = "INSERT INTO `$table_name` (`" . implode("`, `", $columnsList) . "`) VALUES ($placeholders)";
+
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -216,7 +218,6 @@ $check_stmt->close();
 
 $api_url_for_job = 'https://api.jobdiva.com/api/bi/JobsDetail?jobIds=' . urlencode($jobId);
 
-echo "id for job is $jobId.";
 
 // Initialize cURL session for each job ID
 $ch2 = curl_init();
@@ -230,6 +231,8 @@ curl_setopt($ch2, CURLOPT_HTTPHEADER, array(
 
 // Execute cURL session
 $api_response_for_job = curl_exec($ch2);
+
+
 
 // Check for errors in cURL execution
 if ($api_response_for_job === false) {
