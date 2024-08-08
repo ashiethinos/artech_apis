@@ -39,37 +39,37 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <form action="">
+                                        <form action="" id="job_apply_form"  enctype="multipart/form-data">
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <input type="text" class="form-control fs-16"
-                                                        placeholder="First Name">
+                                                    <input type="text" for="firstName" name="firstName" class="form-control fs-16"
+                                                        placeholder="First Name" required >
                                                 </div>
                                                 <div class="col-md-6  mb-3">
                                                     <input type="text" class="form-control fs-16"
-                                                        placeholder="Last Name">
+                                                        placeholder="Last Name"  name="lastName" required>
                                                 </div>
                                                 <div class="col-md-6  mb-3">
                                                     <input type="email" class="form-control fs-16"
-                                                        placeholder="Email ID">
+                                                        placeholder="Email ID"  name="email" required>
                                                 </div>
                                                 <div class="col-md-6  mb-3">
                                                     <input type="number" class="form-control fs-16"
-                                                        placeholder="Phone No">
+                                                        placeholder="Phone No"  name="phone" required>
                                                 </div>
                                                 <div class="col-md-12  mb-3">
                                                     <input type="text" class="form-control fs-16"
-                                                        placeholder="Additional Info">
+                                                        placeholder="Additional Info"  name="info" required>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <fieldset class="upload_dropZone text-center mb-3 p-4">
                                                         <legend class="visually-hidden">Image uploader</legend>
                                                         <img src="images/upload.svg" alt="">
                                                         <p class="small my-2 text-grey">Drag and drop a file<br></p>
-                                                        <input id="upload_image_logo" data-post-name="image_logo"
+                                                        <input  name="file" id="upload_image_logo" data-post-name="image_logo"
                                                             data-post-url="https://someplace.com/image/uploads/logos/"
                                                             class="position-absolute invisible" type="file" multiple
-                                                            accept="image/jpeg, image/png, image/svg+xml" />
+                                                            accept="image/jpeg, image/png, image/svg+xml, application/pdf" />
                                                         <label class="" for="upload_image_logo"><i
                                                                 class="text-grey">or</i> <span class="text-voilet">
                                                                 browse your device</span> </label>
@@ -79,7 +79,7 @@
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-md-12 text-center">
-                                                    <button class="btn btn-jl-common">Submit</button>
+                                                    <button type="submit" class="btn btn-jl-common">Submit</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -98,29 +98,29 @@
 
 </html>
 <script>
-$(document).ready(function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const jobId = urlParams.get('job_id');
-    $.ajax({
-        url: 'oracle_single_job_api.php',
-        type: 'GET',
-        data: {
-            jobId: '656'
-        },
-        success: function(response) {
-            const res = JSON.parse(response);
-            const job = res.job;
-            console.log(job)
-            renderJobDetails(job)
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobId = urlParams.get('job_id');
+        $.ajax({
+            url: 'oracle_single_job_api.php',
+            type: 'GET',
+            data: {
+                jobId: '656'
+            },
+            success: function(response) {
+                const res = JSON.parse(response);
+                const job = res.job;
+                console.log(job)
+                renderJobDetails(job)
 
 
-        }
-    });
+            }
+        });
 
 
-    function renderJobDetails(job) {
-        const jobData = `
-                     <div class="row">
+        function renderJobDetails(job) {
+            const jobData = `
+                     <div class="row" id="jobDetailBlock" data-job-id=${job.id}>
                                     <div class="col-md-6">
                                         <p class="fw-700 fs-18">${job.title}</p>
                                         <p class="mb-0 fs-12 text-grey"><svg xmlns="http://www.w3.org/2000/svg"
@@ -162,11 +162,32 @@ $(document).ready(function() {
                                             href="mailto:bhagyashree.Kulkarni@artechinfo.in">Bhagyashree.Kulkarni@artechinfo.in</a>
                                     </p>
                     </div>`
-        $('#job-details').append(jobData)
+            $('#job-details').append(jobData)
 
-        $('.job-title').text(job.title)
-        $('.job-location').text(job.primaryLocation)
+            $('.job-title').text(job.title)
+            $('.job-location').text(job.primaryLocation)
 
-    }
-});
+        }
+
+        $('#job_apply_form').on('submit', function(e) {
+            e.preventDefault();
+
+            const jobId = $('#jobDetailBlock').attr('data-job-id')
+            const formData = new FormData(this)
+            formData.append('jobId', jobId)
+            $.ajax({
+                    url: "oracle_apply_job.php",
+                    type: "POST",
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false, // Let jQuery set the content type
+                    processData: false, // Prevent jQuery from processing the data
+                    success: function(response) {
+                        alert(response.message);
+                    },
+                   
+                });
+        });
+
+    }); 
 </script>

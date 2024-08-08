@@ -2,9 +2,6 @@
 
 include './config.php';
 // Database credentials
-$servername = "localhost";
-$username = "root";
-$password = "";
 $dbname = $database_name;
 
 $authentication_url = "https://api.jobdiva.com/api/authenticate?clientid=" . urlencode($jobdiva_clientId) . "&username=" . urlencode($jobdiva_username) . "&password=" . urlencode($jobdiva_password);

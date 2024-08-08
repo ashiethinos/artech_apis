@@ -70,7 +70,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <form action="">
+                                        <form action="" id="job_apply_form">
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <input type="text" class="form-control fs-16" placeholder="First Name">
@@ -115,3 +115,4 @@
     <?php include_once('includes/footer.php') ?>
   </body>
 </html>
+

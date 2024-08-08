@@ -146,7 +146,6 @@ $('.loader').addClass('active')
         type: 'GET',
         success: function(data) {
            const jobs =  JSON.parse(data).jobs;
-     
            console.log(jobs)
      
   
@@ -168,7 +167,7 @@ $('.loader').addClass('active')
                         <div class="col-md-12">
                             <div class="row justify-content-center">
                               <div class="col-lg-2 col-5 bdr-2 text-center m-1 fs-12">
-    ${job.skills}</div>
+              ${job.skills}</div>
                             </div>
                         </div>
                                    <div class="col-md-12 text-center">

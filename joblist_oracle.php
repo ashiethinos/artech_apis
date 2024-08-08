@@ -89,7 +89,7 @@ include './config.php';
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><img src="images/location.svg"
                                             alt=""></span>
-                                    <select multiple name="" id="" class="locations form-control form-select jl-search">
+                                    <select name="" id="location-search" class="locations form-control form-select jl-search">
                                        
                                     </select>
                                 </div>
@@ -272,6 +272,17 @@ $(document).ready(function() {
         const degreeLevels = parsedData.degreeLevels.sort((a, b) => a.localeCompare(b));
 
         renderJobElements(jobs);
+
+        $(".loader").removeClass("active");
+    }
+
+
+    function handleFilterResponse(data) {
+        const parsedData = JSON.parse(data);
+        const categories = parsedData.categories.sort((a, b) => a.localeCompare(b));
+        const locations = parsedData.locations.sort((a, b) => a.localeCompare(b));
+        const degreeLevels = parsedData.degreeLevels.sort((a, b) => a.localeCompare(b));
+
         renderDropdownOptions("#categories", categories);
         renderDropdownOptions(".locations", locations);
         renderDropdownOptions("#degreeLevels", degreeLevels);
@@ -279,11 +290,18 @@ $(document).ready(function() {
         $(".loader").removeClass("active");
     }
 
+
     function handleError(xhr, status, error) {
         console.log(error);
     }
 
     fetchData("oracle_api.php").done(handleApiResponse).fail(handleError);
+
+    fetchData("oracle_api_filters_data.php").done(handleFilterResponse).fail(handleError);
+
+
+
+    
     var locationParams = [];
     var categoryParams = [];
     var degreeParams = [];
@@ -293,8 +311,9 @@ $(document).ready(function() {
 $("#job-search-form").on("submit", function(e) {
     e.preventDefault();
     const searchTerm = $('#search-keyword').val();
-    console.log(searchTerm)
-    fetchData("oracle_api.php", { searchTerm: searchTerm })
+    const location = $('#location-search').val();
+  
+    fetchData("oracle_api.php", { searchTerm: searchTerm ,searchLocation:location })
             .done(handleApiResponse)
             .fail(handleError);
 })

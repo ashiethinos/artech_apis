@@ -3,9 +3,7 @@ include './config.php';
 set_time_limit(300);
 $start_time = microtime(true);
 // Database credentials
-$servername = "localhost";
-$username = "root";
-$password = "";
+
 $dbname = $database_name;
 
 // External API URL

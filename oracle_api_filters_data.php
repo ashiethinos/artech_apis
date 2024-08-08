@@ -17,7 +17,7 @@ $selectedLocations = isset($_GET['locationValues']) ? json_decode($_GET['locatio
 $selectedCategories = isset($_GET['categoryValues']) ? json_decode($_GET['categoryValues'], true) : [];
 $selectedDegrees = isset($_GET['degreeValues']) ? json_decode($_GET['degreeValues'], true) : [];
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
-$searchTermLocation = isset($_GET['searchLocation']) ? $_GET['searchLocation'] : '';
+
 
 
 // Initialize SQL query for jobs
@@ -61,13 +61,6 @@ if (!empty($searchTerm)) {
     
     // Append 's' for each parameter added to the types string
     $types .= 'ssss'; // Four 's' for four string parameters
-
-    if (!empty($searchTermLocation)) {
-        // Add location to search
-        $sql .= " AND primaryLocation LIKE ?";
-        $params[] = "%$searchTermLocation%"; // For location
-        $types .= 's'; // One more 's' for the location parameter
-    }
 }
 // Prepare and execute the statement for jobs
 $stmt = $conn->prepare($sql);
@@ -87,11 +80,6 @@ if (!$result) {
     die(json_encode(["error" => "Query failed: " . $stmt->error]));
 }
 
-$jobs = [];
-
-while ($row = $result->fetch_assoc()) {
-    $jobs[] = $row;
-}
 
 // Free result set
 $result->free();
@@ -141,10 +129,8 @@ $conn->close();
 // Return success message
 echo json_encode([
     "status" => "success",
-    "count" => count($jobs), 
     "from" => "oracle",
     "message" => "Data retrieved successfully",
-    "jobs" => $jobs,
     "categories" => $categories,
     "locations" => $locations,
     "degreeLevels" => $degreeLevels
